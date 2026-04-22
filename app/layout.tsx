@@ -1,0 +1,54 @@
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { QueryProvider } from '@/lib/react-query';
+import ToastProvider from '@/components/ui/ToastProvider';
+import ThemeProvider from '@/components/ThemeProvider';
+import ConditionalHeader from '@/components/ConditionalHeader';
+import MainWrapper from '@/components/MainWrapper';
+<<<<<<< HEAD
+=======
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
+>>>>>>> from-master
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'Eversun SaaS Dashboard',
+  description: 'Dashboard de suivi des installations',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="fr">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#006d6f" />
+      </head>
+      <body
+        className={
+          inter.className +
+          ' bg-pattern-subtle min-h-screen transition-colors duration-150'
+        }
+      >
+        <QueryProvider>
+          <ThemeProvider>
+            <ToastProvider />
+            <ConditionalHeader />
+<<<<<<< HEAD
+            <MainWrapper>{children}</MainWrapper>
+=======
+            <ErrorBoundary>
+              <MainWrapper>{children}</MainWrapper>
+            </ErrorBoundary>
+>>>>>>> from-master
+          </ThemeProvider>
+        </QueryProvider>
+      </body>
+    </html>
+  );
+}

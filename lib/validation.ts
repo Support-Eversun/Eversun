@@ -1,0 +1,41 @@
+import { z } from 'zod';
+
+export const clientSchema = z.object({
+  _id: z.string().optional(),
+  id: z.union([z.string(), z.number()]).optional(),
+  section: z.enum([
+    'clients',
+    'dp-en-cours',
+    'dp-accordes',
+    'dp-refuses',
+<<<<<<< HEAD
+=======
+    'daact',
+>>>>>>> from-master
+    'consuel-en-cours',
+    'consuel-finalise',
+    'raccordement',
+    'raccordement-mes',
+  ]),
+  client: z.string().min(1),
+  prestataire: z.string().optional(),
+  statut: z.string().optional(),
+  dateEnvoi: z.string().optional(),
+  dateEstimative: z.string().optional(),
+  financement: z.string().optional(),
+  noDp: z.string().optional(),
+  ville: z.string().optional(),
+  portail: z.string().optional(),
+  identifiant: z.string().optional(),
+  motDePasse: z.string().optional(),
+  type: z.string().optional(),
+  pvChantier: z.string().optional(),
+  causeNonPresence: z.string().optional(),
+  etatActuel: z.string().optional(),
+  typeConsuel: z.string().optional(),
+  dateDerniereDemarche: z.string().optional(),
+  commentaires: z.string().optional(),
+  raccordement: z.string().optional(),
+  numeroContrat: z.string().optional(),
+  dateMiseEnService: z.string().optional(),
+});
