@@ -1,6 +1,6 @@
 'use client';
 
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
 import { cn } from '@/lib/utils';
 import type { WithLabelError, WithIcon } from '@/types/common';
 
@@ -11,14 +11,15 @@ interface InputProps
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, label, error, helperText, id, icon, name, ...props }, ref) => {
-    const inputId = id || `input-${name || Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || (name ? `input-${name}` : generatedId);
 
     return (
       <div className="space-y-2">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-semibold text-gray-700 dark:text-gray-300"
+            className="text-sm font-semibold text-secondary"
           >
             {label}
           </label>
@@ -35,7 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             name={name}
             key={name || inputId}
             className={cn(
-              'flex h-12 w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:border-amber-500 dark:focus-visible:border-amber-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 shadow hover:shadow-md',
+              'flex h-12 w-full rounded-lg border border-primary bg-primary px-4 py-3 text-sm text-primary ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:border-amber-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 shadow hover:shadow-md',
               icon && 'pl-12',
               error &&
                 'border-red-500 focus-visible:ring-red-500 focus-visible:border-red-500',
@@ -67,7 +68,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </p>
         )}
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="text-sm text-gray-500 dark:text-gray-400">
+          <p id={`${inputId}-helper`} className="text-sm text-tertiary">
             {helperText}
           </p>
         )}

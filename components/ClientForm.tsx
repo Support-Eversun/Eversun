@@ -1,9 +1,10 @@
 ﻿'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ClientRecord, Section } from '@/types/client';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import DatePicker from '@/components/ui/DatePicker';
 import Select from '@/components/ui/Select';
 import AutocompleteInput from '@/components/ui/AutocompleteInput';
 import Badge from '@/components/ui/Badge';
@@ -98,6 +99,8 @@ export default function ClientForm({
   const [isEditing, setIsEditing] = useState(false);
   const [dpAccordesClients, setDpAccordesClients] = useState<string[]>([]);
   const [dpAccordesData, setDpAccordesData] = useState<Record<string, { noDp: string; ville: string }>>({});
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     // Fetch clients from DP Accordés section for autocomplete
@@ -159,6 +162,57 @@ export default function ClientForm({
       });
     }
   }, [client, section, isEditing]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !modalRef.current) return;
+      const focusable = Array.from(
+        modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.hasAttribute('disabled'));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement;
+
+      if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    };
+
+    previousActiveElementRef.current = document.activeElement as HTMLElement;
+    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleTabKey);
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+      const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      firstFocusable?.focus();
+    });
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleTabKey);
+      document.body.style.overflow = 'unset';
+      previousActiveElementRef.current?.focus();
+    };
+  }, [onClose]);
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const handleChange = (key: keyof ClientRecord, value: string) => {
     setIsEditing(true);
@@ -323,11 +377,11 @@ export default function ClientForm({
   };
 
   const getSectionColor = () => {
-    if (isDp) return 'bg-gradient-to-r from-teal-100 to-cyan-100 text-teal-700 border-teal-300 dark:from-teal-900/40 dark:to-cyan-900/40 dark:text-teal-400 dark:border-teal-700';
-    if (isConsuel) return 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 border-emerald-300 dark:from-emerald-900/40 dark:to-green-900/40 dark:text-emerald-400 dark:border-emerald-700';
+    if (isDp) return 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-800';
+    if (isConsuel) return 'bg-success-50 dark:bg-success-900/20 text-success-700 dark:text-success-300 border-success-200 dark:border-success-800';
     if (isRaccordement)
-      return 'bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 border-orange-300 dark:from-orange-900/40 dark:to-amber-900/40 dark:text-orange-400 dark:border-orange-700';
-    return 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 border-gray-300 dark:from-gray-800 dark:to-gray-700 dark:text-gray-300 dark:border-gray-600';
+      return 'bg-warning-50 dark:bg-warning-900/20 text-warning-700 dark:text-warning-300 border-warning-200 dark:border-warning-800';
+    return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
   };
 
   return (
@@ -336,15 +390,15 @@ export default function ClientForm({
         className="absolute inset-0 bg-black/60 backdrop-blur-md"
         onClick={onClose}
       />
-      <div className="relative bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden border border-gray-200/50 dark:border-gray-700/50 flex flex-col">
-        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+      <div ref={modalRef} className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg w-full max-w-5xl max-h-[90vh] overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col" role="dialog" aria-modal="true" aria-label={client ? 'Modifier le dossier' : 'Ajouter un dossier'}>
+        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg">
+            <div className="p-3 rounded-xl bg-primary-500 text-white">
               {getSectionIcon()}
             </div>
             <div>
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
-                {client ? 'Modifier le client' : 'Ajouter un client'}
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {client ? 'Modifier le dossier' : 'Ajouter un dossier'}
               </h2>
               <Badge className={getSectionColor()}>
                 {section.replace('-', ' ').toUpperCase()}
@@ -360,22 +414,30 @@ export default function ClientForm({
         </div>
 
         <div className="flex-1 overflow-y-auto px-8 py-6 min-h-0">
+          <div className="sticky top-0 z-10 mb-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl border border-gray-200/70 dark:border-gray-700/70 p-3">
+            <div className="flex flex-wrap gap-2">
+              <Button type="button" variant="ghost" size="sm" onClick={() => scrollToSection('form-general')}>General</Button>
+              <Button type="button" variant="ghost" size="sm" onClick={() => scrollToSection('form-workflow')}>Workflow</Button>
+              <Button type="button" variant="ghost" size="sm" onClick={() => scrollToSection('form-details')}>Details</Button>
+              <Button type="button" variant="ghost" size="sm" onClick={() => scrollToSection('form-footer')}>Actions</Button>
+            </div>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-6">
             {section.startsWith('consuel') && form.etatActuel === 'Consuel OK' && (
-              <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/30 dark:to-cyan-900/30 border border-teal-200 dark:border-teal-700 rounded-2xl p-4 shadow-sm">
+              <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-xl p-4">
                 <div className="flex items-center gap-2">
-                  <Info className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-                  <span className="text-sm font-semibold text-teal-800 dark:text-teal-200">
+                  <Info className="h-5 w-5 text-primary-600 dark:text-primary-400" />
+                  <span className="text-sm font-semibold text-primary-800 dark:text-primary-200">
                     Ce dossier sera automatiquement déplacé vers "Consuel Finalisé"
                   </span>
                 </div>
               </div>
             )}
             {section === 'raccordement' && form.raccordement === 'Mise en service' && (
-              <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/30 dark:to-green-900/30 border border-emerald-200 dark:border-emerald-700 rounded-2xl p-4 shadow-sm">
+              <div className="bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-800 rounded-xl p-4">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+                  <CheckCircle className="h-5 w-5 text-success-600 dark:text-success-400" />
+                  <span className="text-sm font-semibold text-success-800 dark:text-success-200">
                     Ce dossier sera automatiquement déplacé vers "Raccordement MES"
                   </span>
                 </div>
@@ -383,7 +445,7 @@ export default function ClientForm({
             )}
 
             {!isDaact && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div id="form-general" className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                   <User className="h-5 w-5 text-teal-500" />
                   Informations générales
@@ -432,25 +494,23 @@ export default function ClientForm({
             )}
 
             {isDp && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div id="form-workflow" className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-teal-500" />
+                  <Calendar className="h-5 w-5 text-primary-500" />
                   Dates et financement
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input
+                  <DatePicker
                     label="Date d'envoi"
-                    type="date"
                     value={form.dateEnvoi}
-                    onChange={(e) => handleChange('dateEnvoi', e.target.value)}
+                    onChange={(value) => handleChange('dateEnvoi', value)}
                     icon={<Calendar className="h-4 w-4" />}
                     name="dateEnvoi"
                   />
-                  <Input
+                  <DatePicker
                     label="Date estimative"
-                    type="date"
                     value={form.dateEstimative}
-                    onChange={(e) => handleChange('dateEstimative', e.target.value)}
+                    onChange={(value) => handleChange('dateEstimative', value)}
                     helperText="Calculée automatiquement selon le statut"
                     icon={<Clock className="h-4 w-4" />}
                     name="dateEstimative"
@@ -469,9 +529,9 @@ export default function ClientForm({
             )}
 
             {isDp && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div id="form-details" className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Gear className="h-5 w-5 text-teal-500" weight="bold" />
+                  <Gear className="h-5 w-5 text-primary-500" weight="bold" />
                   Détails du projet
                 </h3>
 
@@ -526,17 +586,16 @@ export default function ClientForm({
             )}
 
             {isConsuel && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Lightning className="h-5 w-5 text-teal-500" weight="bold" />
+                  <Lightning className="h-5 w-5 text-primary-500" weight="bold" />
                   Détails Consuel
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input
+                  <DatePicker
                     label="PV Chantier"
-                    type="date"
                     value={form.pvChantier}
-                    onChange={(e) => handleChange('pvChantier', e.target.value)}
+                    onChange={(value) => handleChange('pvChantier', value)}
                     icon={<Calendar className="h-4 w-4" />}
                     name="pvChantier"
                   />
@@ -570,19 +629,17 @@ export default function ClientForm({
                     ]}
                     placeholder="Sélectionner un type"
                   />
-                  <Input
+                  <DatePicker
                     label="Date dernière démarche"
-                    type="date"
                     value={form.dateDerniereDemarche}
-                    onChange={(e) => handleChange('dateDerniereDemarche', e.target.value)}
+                    onChange={(value) => handleChange('dateDerniereDemarche', value)}
                     icon={<Calendar className="h-4 w-4" />}
                     name="dateDerniereDemarche"
                   />
-                  <Input
+                  <DatePicker
                     label="Date Estimatives"
-                    type="date"
                     value={form.dateEstimative}
-                    onChange={(e) => handleChange('dateEstimative', e.target.value)}
+                    onChange={(value) => handleChange('dateEstimative', value)}
                     icon={<Clock className="h-4 w-4" />}
                     name="dateEstimative"
                     disabled
@@ -593,9 +650,9 @@ export default function ClientForm({
             )}
 
             {(isConsuel || isRaccordement || isRaccordementMes) && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-teal-500" />
+                  <FileText className="h-5 w-5 text-primary-500" />
                   Commentaires
                 </h3>
                 <Input
@@ -609,9 +666,9 @@ export default function ClientForm({
             )}
 
             {isRaccordement && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <Buildings className="h-5 w-5 text-teal-500" weight="bold" />
+                  <Buildings className="h-5 w-5 text-primary-500" weight="bold" />
                   Raccordement
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -637,19 +694,17 @@ export default function ClientForm({
                     ]}
                     placeholder="Sélectionner un raccordement"
                   />
-                  <Input
+                  <DatePicker
                     label="Date dernière démarche"
-                    type="date"
                     value={form.dateDerniereDemarche}
-                    onChange={(e) => handleChange('dateDerniereDemarche', e.target.value)}
+                    onChange={(value) => handleChange('dateDerniereDemarche', value)}
                     icon={<Calendar className="h-4 w-4" />}
                     name="dateDerniereDemarche"
                   />
-                  <Input
+                  <DatePicker
                     label="Date Estimatives"
-                    type="date"
                     value={form.dateEstimative}
-                    onChange={(e) => handleChange('dateEstimative', e.target.value)}
+                    onChange={(value) => handleChange('dateEstimative', value)}
                     icon={<Clock className="h-4 w-4" />}
                     name="dateEstimative"
                     disabled
@@ -660,9 +715,9 @@ export default function ClientForm({
             )}
 
             {isRaccordementMes && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <House className="h-5 w-5 text-teal-500" weight="bold" />
+                  <House className="h-5 w-5 text-primary-500" weight="bold" />
                   Mise en service
                 </h3>
 
@@ -675,11 +730,10 @@ export default function ClientForm({
                     icon={<FileText className="h-4 w-4" />}
                     name="numeroContrat"
                   />
-                  <Input
+                  <DatePicker
                     label="Date de Mise en service"
-                    type="date"
                     value={form.dateMiseEnService}
-                    onChange={(e) => handleChange('dateMiseEnService', e.target.value)}
+                    onChange={(value) => handleChange('dateMiseEnService', value)}
                     icon={<Calendar className="h-4 w-4" />}
                     name="dateMiseEnService"
                   />
@@ -688,9 +742,9 @@ export default function ClientForm({
             )}
 
             {isDaact && (
-              <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-teal-500" />
+                  <FileText className="h-5 w-5 text-primary-500" />
                   DAACT
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -743,7 +797,7 @@ export default function ClientForm({
               </div>
             )}
 
-            <div className="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div id="form-footer" className="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
               <div className="text-sm text-gray-500 dark:text-gray-400">
                 {form.statut === 'Accord favorable' && (
 

@@ -51,34 +51,34 @@ export default function ConfirmDialog({
     switch (variant) {
       case 'danger':
         return {
-          iconBg: 'bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800',
+          iconBg: 'bg-red-50 dark:bg-red-900/40',
           iconColor: 'text-red-600 dark:text-red-400',
           iconBorder: 'border-red-200 dark:border-red-700',
-          buttonBg: 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-lg shadow-red-500/25',
+          buttonVariant: 'danger' as const,
           icon: <XCircle className="h-8 w-8" weight="fill" />,
         };
       case 'warning':
         return {
-          iconBg: 'bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-900 dark:to-orange-800',
+          iconBg: 'bg-amber-50 dark:bg-amber-900/40',
           iconColor: 'text-amber-600 dark:text-amber-400',
           iconBorder: 'border-amber-200 dark:border-amber-700',
-          buttonBg: 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 shadow-lg shadow-amber-500/25',
+          buttonVariant: 'primary' as const,
           icon: <Warning className="h-8 w-8" weight="fill" />,
         };
       case 'info':
         return {
-          iconBg: 'bg-gradient-to-br from-teal-50 to-cyan-100 dark:from-teal-900 dark:to-cyan-800',
+          iconBg: 'bg-teal-50 dark:bg-teal-900/40',
           iconColor: 'text-teal-600 dark:text-teal-400',
           iconBorder: 'border-teal-200 dark:border-teal-700',
-          buttonBg: 'bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 shadow-lg shadow-teal-500/25',
+          buttonVariant: 'primary' as const,
           icon: <Info className="h-8 w-8" weight="fill" />,
         };
       default:
         return {
-          iconBg: 'bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700',
+          iconBg: 'bg-gray-50 dark:bg-gray-800',
           iconColor: 'text-gray-600 dark:text-gray-400',
           iconBorder: 'border-gray-200 dark:border-gray-600',
-          buttonBg: 'bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 shadow-lg',
+          buttonVariant: 'primary' as const,
           icon: <CheckCircle className="h-8 w-8" weight="fill" />,
         };
     }
@@ -121,7 +121,8 @@ export default function ConfirmDialog({
           <Button
             onClick={handleConfirm}
             loading={isSubmitting}
-            className={`${styles.buttonBg} px-6 py-2.5 font-medium text-white`}
+            variant={styles.buttonVariant}
+            className="px-6 py-2.5 font-medium"
           >
             {confirmText}
           </Button>

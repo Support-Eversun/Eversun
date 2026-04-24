@@ -146,7 +146,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
     return (
       <div
         key={client.id}
-        className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-amber-500 dark:hover:border-amber-500 transition-all duration-200 cursor-pointer hover:shadow hover:scale-[1.01] group relative ${
+        className={`bg-primary border border-primary rounded-lg hover:border-amber-500 transition-all duration-200 cursor-pointer hover:shadow hover:scale-[1.01] group relative ${
           cardView === 'compact' ? 'p-4' : 'p-6'
         }`}
         onClick={() => onEdit(client)}
@@ -161,7 +161,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
         )}
         
         <div className="flex items-start justify-between mb-3">
-          <h3 className={`font-bold text-gray-900 dark:text-white truncate ${cardView === 'compact' ? 'text-sm' : 'text-lg'}`}>
+          <h3 className={`font-bold text-primary truncate ${cardView === 'compact' ? 'text-sm' : 'text-lg'}`}>
             {client.client}
           </h3>
           {client.statut && (
@@ -181,7 +181,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <FileText className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate">
+                      <span className="text-secondary truncate">
                         {client.noDp}
                       </span>
                     </div>
@@ -195,7 +195,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                         <Calendar className="h-4 w-4 text-white" />
                       </div>
                       <div>
-                        <span className="text-gray-700 dark:text-gray-300 block">
+                        <span className="text-secondary block">
                           {new Date(client.dateEstimative).toLocaleDateString('fr-FR')}
                         </span>
                         <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r ${urgency.color} text-white shadow-sm`}>
@@ -209,7 +209,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <FileText className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate">
+                      <span className="text-secondary truncate">
                         {client.noDp}
                       </span>
                     </div>
@@ -219,7 +219,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <MapPin className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate">
+                      <span className="text-secondary truncate">
                         {client.ville}
                       </span>
                     </div>
@@ -233,7 +233,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                         <FileText className="h-4 w-4 text-white" weight="bold" />
                       </div>
                       <div>
-                        <span className="text-gray-700 dark:text-gray-300 block text-xs uppercase tracking-wide">
+                        <span className="text-secondary block text-xs uppercase tracking-wide">
                           Type Consuel
                         </span>
                         <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 text-blue-100 dark:text-blue-200 shadow-sm">
@@ -248,7 +248,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                         <CheckCircle className="h-4 w-4 text-white" weight="bold" />
                       </div>
                       <div>
-                        <span className="text-gray-700 dark:text-gray-300 block text-xs uppercase tracking-wide">
+                        <span className="text-secondary block text-xs uppercase tracking-wide">
                           Statut
                         </span>
                         <span className="inline-block px-2 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-purple-500 to-violet-500 dark:from-purple-600 dark:to-violet-600 text-purple-100 dark:text-purple-200 shadow-sm">
@@ -262,7 +262,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <Calendar className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300">
+                      <span className="text-secondary">
                         {new Date(client.dateEnvoi).toLocaleDateString('fr-FR')}
                       </span>
                     </div>
@@ -272,7 +272,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <MapPin className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate">
+                      <span className="text-secondary truncate">
                         {client.ville}
                       </span>
                     </div>
@@ -285,7 +285,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <Buildings className="h-4 w-4 text-teal-600 dark:text-teal-400" weight="bold" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate">
+                      <span className="text-secondary truncate">
                         {client.prestataire}
                       </span>
                     </div>
@@ -295,7 +295,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <Calendar className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300">
+                      <span className="text-secondary">
                         {new Date(client.dateEnvoi).toLocaleDateString('fr-FR')}
                       </span>
                     </div>
@@ -305,7 +305,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
                       <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/30">
                         <MapPin className="h-4 w-4 text-teal-600 dark:text-teal-400" />
                       </div>
-                      <span className="text-gray-700 dark:text-gray-300 truncate">
+                      <span className="text-secondary truncate">
                         {client.ville}
                       </span>
                     </div>
@@ -314,7 +314,7 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
               )}
             </div>
             
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex gap-2">
+            <div className="mt-4 pt-4 border-t border-primary flex gap-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -359,15 +359,15 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-md">
+      <div className="bg-primary border border-primary rounded-lg p-4 shadow-md">
         <div className="flex flex-wrap gap-4 items-center">
           {/* Sort */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Trier par:</span>
+            <span className="text-sm font-semibold text-secondary">Trier par:</span>
             <select
               value={sortField}
               onChange={(e) => setSortField(e.target.value as SortField)}
-              className="px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="select-enhanced px-3 py-2"
             >
               <option value="client">Client</option>
               <option value="statut">{section.startsWith('consuel') ? 'Statut' : 'Statut'}</option>
@@ -378,13 +378,13 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
             </select>
             <button
               onClick={() => setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')}
-              className="p-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+              className="p-2 bg-secondary border border-primary rounded-lg hover:bg-secondary transition-colors"
               title={sortDirection === 'asc' ? 'Croissant' : 'Décroissant'}
             >
               {sortDirection === 'asc' ? (
-                <SortAscending className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                <SortAscending className="h-4 w-4 text-tertiary" />
               ) : (
-                <SortDescending className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                <SortDescending className="h-4 w-4 text-tertiary" />
               )}
             </button>
           </div>
@@ -392,11 +392,11 @@ export default function ClientGrid({ section, items, onEdit, onDelete, onMove }:
 
           {/* Group By */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Grouper par:</span>
+            <span className="text-sm font-semibold text-secondary">Grouper par:</span>
             <select
               value={groupBy}
               onChange={(e) => setGroupBy(e.target.value as GroupBy)}
-              className="px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="select-enhanced px-3 py-2"
             >
               <option value="none">Aucun</option>
               <option value="statut">Statut</option>

@@ -5,7 +5,6 @@ import { ClientSchema } from '@/lib/clientModel';
 import { hashPassword } from '@/lib/password';
 
 const sectionToCollection = {
-  clients: 'clients',
   'dp-en-cours': 'dp_in_progress',
   'dp-accordes': 'dp_received',
   'dp-refuses': 'dp_ko',
@@ -47,10 +46,7 @@ export async function PUT(
 
 
     try {
-      // Hasher le mot de passe si présent et modifié
-      if (data.motDePasse) {
-        data.motDePasse = await hashPassword(data.motDePasse);
-      }
+      // Ne pas hasher le mot de passe - stocker en clair pour affichage
 
       const updated = await Model.findByIdAndUpdate(id, data, { new: true });
       if (!updated) {
@@ -119,10 +115,7 @@ export async function PATCH(
 
 
     try {
-      // Hasher le mot de passe si présent et modifié
-      if (data.motDePasse) {
-        data.motDePasse = await hashPassword(data.motDePasse);
-      }
+      // Ne pas hasher le mot de passe - stocker en clair pour affichage
 
       const updated = await Model.findByIdAndUpdate(id, data, { new: true });
       if (!updated) {

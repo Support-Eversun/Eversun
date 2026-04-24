@@ -109,6 +109,14 @@ export async function GET(request: Request) {
                 client: record.client,
                 ville: record.ville || '',
                 noDp: record.noDp || '',
+                prestataire: record.prestataire || '',
+                financement: record.financement || '',
+                statut: record.statut || '',
+                dateEnvoi: record.dateEnvoi || '',
+                dateEstimative: record.dateEstimative || '',
+                portail: record.portail || '',
+                identifiant: record.identifiant || '',
+                motDePasse: record.motDePasse || '',
                 stages: {},
               });
             }
@@ -126,9 +134,14 @@ export async function GET(request: Request) {
               updatedAt: new Date(),
             };
 
-            // Update ville and noDp if not set
+            // Update other fields if not set
             if (!clientRecord.ville && record.ville) clientRecord.ville = record.ville;
             if (!clientRecord.noDp && record.noDp) clientRecord.noDp = record.noDp;
+            if (!clientRecord.prestataire && record.prestataire) clientRecord.prestataire = record.prestataire;
+            if (!clientRecord.financement && record.financement) clientRecord.financement = record.financement;
+            if (!clientRecord.portail && record.portail) clientRecord.portail = record.portail;
+            if (!clientRecord.identifiant && record.identifiant) clientRecord.identifiant = record.identifiant;
+            if (!clientRecord.motDePasse && record.motDePasse) clientRecord.motDePasse = record.motDePasse;
 
             await clientRecord.save();
           }

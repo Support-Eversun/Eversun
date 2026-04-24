@@ -31,20 +31,20 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group active:scale-95';
+      'inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group';
 
     const variants = {
       // Modern cyan gradient with glassmorphism on hover
       primary:
-        'bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white shadow-md hover:shadow-lg hover:shadow-primary/30 transform hover:scale-[1.02]',
+        'bg-primary-600 hover:bg-primary-700 text-white shadow-sm hover:shadow',
       
       // Modern slate secondary
       secondary:
-        'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 hover:shadow-base transform hover:scale-[1.02]',
+        'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700',
       
       // Modern cyan outline with glassmorphism
       outline:
-        'bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm text-primary-600 dark:text-primary-400 border border-primary-300/50 dark:border-primary-500/50 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:shadow-base transform hover:scale-[1.02]',
+        'bg-white dark:bg-slate-900 text-primary-600 dark:text-primary-400 border border-primary-300 dark:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20',
       
       // Modern ghost
       ghost:
@@ -52,7 +52,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       
       // Modern rose danger
       danger:
-        'bg-gradient-to-r from-error-500 to-error-600 hover:from-error-600 hover:to-error-700 text-white shadow-md hover:shadow-lg hover:shadow-error/30 transform hover:scale-[1.02]',
+        'bg-error-600 hover:bg-error-700 text-white shadow-sm hover:shadow',
     };
 
     const sizes = {
@@ -93,9 +93,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           {icon && !loading && <span className="mr-2">{icon}</span>}
           {children}
         </span>
-        {variant === 'primary' || variant === 'danger' ? (
-          <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-        ) : null}
+        {null}
       </button>
     );
   }

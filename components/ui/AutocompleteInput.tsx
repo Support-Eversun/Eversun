@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import { cn } from '@/lib/utils';
 import { CaretDown, X } from '@phosphor-icons/react';
 import type { WithLabelError, WithIcon } from '@/types/common';
@@ -45,7 +45,8 @@ const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputPr
     const inputRef = useRef<HTMLInputElement | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-    const inputId = id || `autocomplete-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = useId();
+    const inputId = id || generatedId;
 
     useEffect(() => {
       if (value && readOnlyAfterSelect && !isReadOnly) {
@@ -134,14 +135,14 @@ const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputPr
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-semibold text-gray-700 dark:text-gray-300"
+            className="text-sm font-semibold text-secondary"
           >
             {label}
           </label>
         )}
         <div className="relative group" ref={dropdownRef}>
           {icon && (
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 group-focus-within:text-amber-500 transition-colors duration-200">
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-500 group-focus-within:text-primary-500 dark:group-focus-within:text-primary-400 transition-colors duration-200">
               {icon}
             </div>
           )}
@@ -156,7 +157,7 @@ const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputPr
               }
             }}
             className={cn(
-              'flex h-12 w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:border-amber-500 dark:focus-visible:border-amber-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 shadow hover:shadow-md appearance-none',
+              'flex h-12 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm text-gray-900 dark:text-white ring-offset-gray-100 dark:ring-offset-gray-900 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 shadow hover:shadow-md appearance-none',
               icon && 'pl-12',
               (value && readOnlyAfterSelect) && 'pr-12',
               error &&
@@ -194,14 +195,14 @@ const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputPr
             </button>
           )}
           {!isReadOnly && !value && (
-            <CaretDown className="absolute right-4 top-1/2 transform -translate-y-1/2 h-4 w-4 pointer-events-none text-gray-400 group-focus-within:text-amber-500 transition-colors duration-200" weight="bold" />
+            <CaretDown className="absolute right-4 top-1/2 transform -translate-y-1/2 h-4 w-4 pointer-events-none text-gray-400 dark:text-gray-500 group-focus-within:text-primary-500 dark:group-focus-within:text-primary-400 transition-colors duration-200" weight="bold" />
           )}
           
           {isOpen && filteredOptions.length > 0 && (
             <ul
               id={`${inputId}-listbox`}
               role="listbox"
-              className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto"
+              className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-auto"
             >
               {filteredOptions.map((option, index) => (
                 <li
@@ -210,8 +211,8 @@ const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputPr
                   className={cn(
                     'px-4 py-3 cursor-pointer transition-colors',
                     index === highlightedIndex
-                      ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100'
+                      ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
                   )}
                   onClick={() => handleSelectOption(option)}
                   aria-selected={index === highlightedIndex}

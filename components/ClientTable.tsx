@@ -43,6 +43,8 @@ import {
 import ClientModal from '@/components/ClientModal';
 import PaginationControls from '@/components/PaginationControls';
 import { useClientTableFilters, useClientTablePagination } from '@/hooks/useClientTable';
+import DatePicker from '@/components/ui/DatePicker';
+import FilterChips from '@/components/ui/FilterChips';
 
 /**
  * Props pour le composant ClientTable
@@ -213,6 +215,27 @@ export default function ClientTable({
     setShowPassword(false);
   };
 
+  // Build active filters list for FilterChips
+  const activeFilters = [
+    ...(filterStatus ? [{ key: 'status', label: 'Statut', value: filterStatus }] : []),
+    ...(filterVille ? [{ key: 'ville', label: 'Ville', value: filterVille }] : []),
+    ...(filterPrestataire ? [{ key: 'prestataire', label: 'Prestataire', value: filterPrestataire }] : []),
+    ...(filterFinancement ? [{ key: 'financement', label: 'Financement', value: filterFinancement }] : []),
+    ...(filterDateFrom ? [{ key: 'dateFrom', label: 'Date de', value: filterDateFrom }] : []),
+    ...(filterDateTo ? [{ key: 'dateTo', label: 'Date à', value: filterDateTo }] : []),
+  ];
+
+  const handleRemoveFilter = (key: string) => {
+    switch (key) {
+      case 'status': setFilterStatus(''); break;
+      case 'ville': setFilterVille(''); break;
+      case 'prestataire': setFilterPrestataire(''); break;
+      case 'financement': setFilterFinancement(''); break;
+      case 'dateFrom': setFilterDateFrom(''); break;
+      case 'dateTo': setFilterDateTo(''); break;
+    }
+  };
+
   return (
     <>
       <div className="w-full overflow-x-auto py-6">
@@ -221,68 +244,76 @@ export default function ClientTable({
 
           {/* Filter Panel */}
           {showFilters && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-md animate-in slide-in-top duration-300">
+            <div
+              className="bg-primary rounded-lg border border-primary p-4 shadow-md animate-in slide-in-top duration-300"
+              role="region"
+              aria-label="Filtres du tableau"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Statut</label>
+                  <label className="block text-sm font-semibold text-secondary mb-1">Statut</label>
                   <input
                     type="text"
                     placeholder="Filtrer par statut"
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    aria-label="Filtrer par statut"
+                    className="w-full px-3 py-2 rounded-lg border border-primary bg-primary text-sm text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Ville</label>
+                  <label className="block text-sm font-semibold text-secondary mb-1">Ville</label>
                   <input
                     type="text"
                     placeholder="Filtrer par ville"
                     value={filterVille}
                     onChange={(e) => setFilterVille(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    aria-label="Filtrer par ville"
+                    className="w-full px-3 py-2 rounded-lg border border-primary bg-primary text-sm text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Prestataire</label>
+                  <label className="block text-sm font-semibold text-secondary mb-1">Prestataire</label>
                   <input
                     type="text"
                     placeholder="Filtrer par prestataire"
                     value={filterPrestataire}
                     onChange={(e) => setFilterPrestataire(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    aria-label="Filtrer par prestataire"
+                    className="w-full px-3 py-2 rounded-lg border border-primary bg-primary text-sm text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Financement</label>
+                  <label className="block text-sm font-semibold text-secondary mb-1">Financement</label>
                   <input
                     type="text"
                     placeholder="Filtrer par financement"
                     value={filterFinancement}
                     onChange={(e) => setFilterFinancement(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    aria-label="Filtrer par financement"
+                    className="w-full px-3 py-2 rounded-lg border border-primary bg-primary text-sm text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Date estimative (de)</label>
-                  <input
-                    type="date"
+                  <label className="block text-sm font-semibold text-secondary mb-1">Date estimative (de)</label>
+                  <DatePicker
                     value={filterDateFrom}
-                    onChange={(e) => setFilterDateFrom(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    onChange={setFilterDateFrom}
+                    placeholderText="JJ/MM/AAAA"
+                    className="h-10 px-3 py-2 text-sm shadow-none hover:shadow-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Date estimative (à)</label>
-                  <input
-                    type="date"
+                  <label className="block text-sm font-semibold text-secondary mb-1">Date estimative (à)</label>
+                  <DatePicker
                     value={filterDateTo}
-                    onChange={(e) => setFilterDateTo(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    onChange={setFilterDateTo}
+                    placeholderText="JJ/MM/AAAA"
+                    className="h-10 px-3 py-2 text-sm shadow-none hover:shadow-none"
                   />
                 </div>
               </div>
-              <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-end gap-2 mt-4 pt-4 border-t border-primary">
                 <button
                   onClick={() => {
                     setFilterStatus('');
@@ -292,7 +323,7 @@ export default function ClientTable({
                     setFilterDateFrom('');
                     setFilterDateTo('');
                   }}
-                  className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+                  className="px-4 py-2 rounded-lg border border-primary text-secondary font-semibold hover:bg-secondary transition-all duration-200"
                 >
                   Réinitialiser
                 </button>
@@ -305,12 +336,20 @@ export default function ClientTable({
               </div>
             </div>
           )}
+          
+          {/* Active Filter Chips */}
+          <FilterChips
+            filters={activeFilters}
+            onRemove={handleRemoveFilter}
+            onResetAll={resetFilters}
+          />
+          
           <div className="flex items-center justify-between gap-3">
-            <label className="text-gray-700 dark:text-gray-300 font-medium text-sm">Lignes par page</label>
+            <label className="text-secondary font-medium text-sm">Lignes par page</label>
             <select
               value={rowsPerPage}
               onChange={(e) => setRowsPerPage(Number(e.target.value))}
-              className="h-10 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 cursor-pointer shadow-sm"
+              className="select-enhanced h-10 px-3 py-2"
             >
               {[5, 10, 20, 50].map((n) => (
                 <option key={n} value={n}>
@@ -323,7 +362,7 @@ export default function ClientTable({
 
         {/* Tableau moderne - Responsive Design */}
         <div
-          className={`rounded-lg shadow-sm bg-white dark:bg-gray-900 border border-border dark:border-gray-700 overflow-hidden transition-all duration-300 ${
+          className={`rounded-lg shadow-sm bg-primary border border-primary overflow-hidden transition-all duration-300 ${
             isPageTransitioning
               ? transitionDirection === 'right'
                 ? 'opacity-0 transform translateX(-20px)'
@@ -333,14 +372,20 @@ export default function ClientTable({
         >
           {/* Desktop/Tablette Table - Horizontal scroll for all columns */}
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm text-text-primary dark:text-gray-100">
+            <table className="min-w-full text-sm text-primary">
+              <caption className="sr-only">
+                Tableau des dossiers clients, {filteredItems.length} resultats
+              </caption>
               <thead>
-                <tr className="bg-secondary dark:bg-gray-800 border-b border-border dark:border-gray-700">
+                <tr className="bg-secondary border-b border-primary">
                   {columns.map((col, idx) => (
                     <th
                       key={col.key as string}
-                      className={`px-4 py-3 font-semibold text-left cursor-pointer select-none hover:bg-secondary-dark dark:hover:bg-gray-700 transition-colors duration-200 whitespace-nowrap text-xs uppercase tracking-wider text-text-secondary dark:text-gray-400 ${
-                        idx === 0 ? 'sticky left-0 bg-secondary dark:bg-gray-800 z-10 shadow-r' : ''
+                      aria-sort={
+                        sortKey === col.key ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'
+                      }
+                      className={`px-4 py-3 font-semibold text-left cursor-pointer select-none hover:bg-secondary-dark transition-colors duration-200 whitespace-nowrap text-xs uppercase tracking-wider text-tertiary ${
+                        idx === 0 ? 'sticky left-0 bg-secondary z-10 shadow-r' : ''
                       }`}
                       onClick={() => setSortKey(col.key as string)}
                     >
@@ -414,12 +459,11 @@ export default function ClientTable({
                 {paginated.map((item, idx) => (
                   <tr
                     key={item._id || item.id || idx}
-                    className={`group hover:bg-secondary dark:hover:bg-gray-800 transition-colors duration-200 border-b border-border dark:border-gray-700 last:border-b-0 cursor-pointer ${
+                    className={`group hover:bg-secondary dark:hover:bg-gray-800 transition-colors duration-200 border-b border-border dark:border-gray-700 last:border-b-0 ${
                       isPageTransitioning
                         ? 'opacity-0 transform translateX(10px)'
                         : 'opacity-100 transform translateX(0)'
                     }`}
-                    onClick={() => handleClientClick(item)}
                     style={{
                       animation: isPageTransitioning
                         ? 'none'
@@ -430,10 +474,19 @@ export default function ClientTable({
                       <td
                         key={col.key as string}
                         className={`px-4 py-4 whitespace-nowrap ${
-                          cellIdx === 0 ? 'sticky left-0 bg-white dark:bg-gray-900 z-10' : ''
+                          cellIdx === 0 ? 'sticky left-0 bg-primary z-10' : ''
                         }`}
                       >
-                        {col.key === 'dateEnvoi' ||
+                        {cellIdx === 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => handleClientClick(item)}
+                            className="text-left w-full font-semibold text-primary hover:text-amber-600 dark:hover:text-amber-400 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded"
+                            aria-label={`Voir le détail du dossier ${item.client || 'client'}`}
+                          >
+                            {(item[col.key] as string) || '-'}
+                          </button>
+                        ) : col.key === 'dateEnvoi' ||
                         col.key === 'dateEstimative' ||
                         col.key === 'pvChantier' ||
                         col.key === 'dateDerniereDemarche' ||
@@ -447,21 +500,21 @@ export default function ClientTable({
                             href={item.portail}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-success text-white font-medium hover:bg-success-light transition-colors duration-200 text-xs"
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-success-500 text-white dark:text-white font-medium hover:bg-success-600 dark:hover:bg-success-600 transition-colors duration-200 text-xs"
                             onClick={(e) => e.stopPropagation()}
                           >
                             Connexion
                             <ArrowSquareOut className="w-3 h-3" weight="bold" />
                           </a>
                         ) : col.key === 'identifiant' && item.identifiant ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-blue-50 text-accent font-medium text-xs border border-blue-200">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 font-medium text-xs border border-primary-200 dark:border-primary-800">
                             <Key className="w-3 h-3" weight="bold" />
                             {item.identifiant}
                           </span>
                         ) : col.key === 'motDePasse' && item.motDePasse ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-red-50 text-error font-medium text-xs border border-red-200">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-error-50 dark:bg-error-900/20 text-error-700 dark:text-error-300 font-medium text-xs border border-error-200 dark:border-error-800">
                               <Key className="w-3 h-3" weight="bold" />
-                              {'********'}
+                              {item.motDePasse}
                             </span>
                           ) : col.key === 'statut' && item.statut ? (
                             <span className={`inline-flex items-center px-2 py-1 rounded font-medium text-xs border ${getStatutBadgeColor(item.statut)}`}>
@@ -492,7 +545,7 @@ export default function ClientTable({
                               {item.causeNonPresence}
                             </span>
                           ) : (
-                            <span className="font-medium text-text-primary dark:text-gray-100">
+                            <span className="font-medium text-primary">
                               {(item[col.key] as string) || '-'}
                             </span>
                           )}

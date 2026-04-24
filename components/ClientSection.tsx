@@ -6,6 +6,7 @@ import ClientGrid from '@/components/ClientGrid';
 import ClientCalendar from '@/components/ClientCalendar';
 import ClientForm from '@/components/ClientForm';
 import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { GridSkeleton, TableSkeleton } from '@/components/ui/Skeleton';
 import EmptyState from '@/components/ui/EmptyState';
@@ -456,42 +457,40 @@ export default function ClientSection({ section }: ClientSectionProps) {
   };
 
   return (
-    <div className="p-4 md:p-6 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
+    <div className="p-4 md:p-6 min-h-screen bg-secondary">
       {/* Header de section moderne */}
       {loading ? (
         <div className="space-y-6">
-          <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-lg p-6 md:p-8 shadow-md">
+          <div className="bg-primary backdrop-blur-xl border border-primary rounded-lg p-6 md:p-8 shadow-md">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+              <div className="w-14 h-14 bg-tertiary rounded-lg animate-pulse" />
               <div className="flex-1 space-y-2">
-                <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-                <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                <div className="h-8 w-64 bg-tertiary rounded-lg animate-pulse" />
+                <div className="h-4 w-32 bg-tertiary rounded-lg animate-pulse" />
               </div>
             </div>
           </div>
           {displayedTab === 'table' ? <TableSkeleton rows={5} /> : <GridSkeleton items={8} />}
         </div>
       ) : (
-        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-lg p-6 md:p-8 mb-6 shadow-md">
+        <div className="bg-primary backdrop-blur-xl border border-primary rounded-lg p-6 md:p-8 mb-6 shadow-md">
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6">
             <div className="flex items-start gap-5">
-              <div
-                className={`p-4 rounded-lg bg-gradient-to-br ${sectionColor} text-white shadow-md transform hover:scale-[1.01] transition-all duration-200`}
-              >
+              <div className="p-4 rounded-lg bg-primary-500 text-white transition-colors duration-200">
                 {sectionIcon}
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-3">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
                   {sectionTitle}
                 </h1>
                 <div className="flex flex-wrap gap-2">
-                  <div className="px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg text-sm font-bold shadow-md">
+                  <div className="px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-bold">
                     {sectionItems.length}{' '}
                     {sectionItems.length === 1 ? 'dossier' : 'dossiers'}
                   </div>
                   {/* Statistiques par statut pour la section actuelle */}
                   {Object.entries(statusCounts).map(([statut, count]) => (
-                    <div key={statut} className="px-3 py-2 bg-gradient-to-r from-teal-400 to-cyan-400 text-white rounded-lg text-sm font-semibold shadow-md">
+                    <div key={statut} className="px-3 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-semibold">
                       {count} {statut}
                     </div>
                   ))}
@@ -502,12 +501,13 @@ export default function ClientSection({ section }: ClientSectionProps) {
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
               <div className="relative flex-1 sm:w-72">
                 <MagnifyingGlass className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" weight="bold" />
-                <input
+                <Input
                   type="text"
                   placeholder="Rechercher..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-600"
+                  className="pl-12 pr-4 shadow-none hover:shadow-none"
+                  aria-label="Rechercher un dossier"
                 />
               </div>
               <div className="flex gap-3">
@@ -522,7 +522,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
                   Rafraîchir
                 </Button>
                 {section !== 'dp-accordes' && section !== 'dp-refuses' && section !== 'consuel-finalise' && section !== 'raccordement-mes' && (
-                  <Button onClick={openAddForm} icon={<Plus className="w-4 h-4" weight="bold" />} className="rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
+                  <Button onClick={openAddForm} icon={<Plus className="w-4 h-4" weight="bold" />} variant="primary">
                     Nouveau dossier
                   </Button>
                 )}
@@ -533,14 +533,14 @@ export default function ClientSection({ section }: ClientSectionProps) {
       )}
 
       {/* Navigation par onglets */}
-      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-lg p-2 mb-6 shadow-md">
+      <div className="bg-primary backdrop-blur-xl border border-primary rounded-lg p-2 mb-6 shadow-md">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleTabChange('table')}
             className={`px-6 py-3 rounded-lg text-sm font-bold transition-all duration-200 flex items-center gap-2 ${
               activeTab === 'table'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md transform scale-105'
-                : 'text-gray-600 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-amber-900/30'
+                ? 'bg-primary-500 text-white'
+                : 'text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20'
             }`}
           >
             <Table className="h-4 w-4" weight="bold" />
@@ -550,8 +550,8 @@ export default function ClientSection({ section }: ClientSectionProps) {
             onClick={() => handleTabChange('grid')}
             className={`px-6 py-3 rounded-lg text-sm font-bold transition-all duration-200 flex items-center gap-2 ${
               activeTab === 'grid'
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md transform scale-105'
-                : 'text-gray-600 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-amber-900/30'
+                ? 'bg-primary-500 text-white'
+                : 'text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20'
             }`}
           >
             <GridFour className="h-4 w-4" weight="bold" />
@@ -562,8 +562,8 @@ export default function ClientSection({ section }: ClientSectionProps) {
               onClick={() => handleTabChange('calendar')}
               className={`px-6 py-3 rounded-lg text-sm font-bold transition-all duration-200 flex items-center gap-2 ${
                 activeTab === 'calendar'
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md transform scale-105'
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-amber-900/30'
+                  ? 'bg-primary-500 text-white'
+                  : 'text-secondary hover:bg-primary-50 dark:hover:bg-primary-900/20'
               }`}
             >
               <Calendar className="h-4 w-4" weight="bold" />
@@ -575,7 +575,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
 
       {/* Contenu selon l'onglet actif */}
       <div
-        className={`bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-md transition-all duration-200 ${
+        className={`bg-primary backdrop-blur-xl border border-primary rounded-lg p-6 shadow-md transition-all duration-200 ${
           isTabTransitioning
             ? 'opacity-0 transform translateX(10px)'
             : 'opacity-100 transform translateX(0)'
@@ -584,7 +584,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 fade-in">
             <svg
-              className="animate-spin h-12 w-12 text-amber-500 mb-4"
+              className="animate-spin h-12 w-12 text-primary-500 mb-4"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -602,7 +602,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            <p className="text-gray-600 dark:text-gray-400 font-bold text-lg">
+            <p className="text-tertiary font-bold text-lg">
               Chargement des données...
             </p>
           </div>
@@ -686,27 +686,27 @@ export default function ClientSection({ section }: ClientSectionProps) {
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Total</span>
-                        <div className="p-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md">
+                        <div className="p-2 rounded-lg bg-primary-500 text-white shadow-md">
                           <FileText className="h-5 w-5" />
                         </div>
                       </div>
-                      <div className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white">
                         {sectionItems.length}
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Dossiers</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Validés</span>
-                        <div className="p-2 rounded-lg bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-md">
+                        <div className="p-2 rounded-lg bg-success-500 text-white shadow-md">
                           <CheckCircle className="h-5 w-5" />
                         </div>
                       </div>
-                      <div className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white">
                         {
                           sectionItems.filter(
                             (c) =>
@@ -720,14 +720,14 @@ export default function ClientSection({ section }: ClientSectionProps) {
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Dossiers terminés</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">En cours</span>
-                        <div className="p-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
+                        <div className="p-2 rounded-lg bg-warning-500 text-white shadow-md">
                           <Clock className="h-5 w-5" />
                         </div>
                       </div>
-                      <div className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white">
                         {
                           sectionItems.filter(
                             (c) =>
@@ -739,14 +739,14 @@ export default function ClientSection({ section }: ClientSectionProps) {
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">En traitement</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-semibold text-gray-600 dark:text-gray-300">Refusés</span>
-                        <div className="p-2 rounded-lg bg-gradient-to-r from-red-500 to-rose-500 text-white shadow-md">
+                        <div className="p-2 rounded-lg bg-error-500 text-white shadow-md">
                           <XCircle className="h-5 w-5" />
                         </div>
                       </div>
-                      <div className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                      <div className="text-3xl font-bold text-gray-900 dark:text-white">
                         {
                           sectionItems.filter(
                             (c) =>
@@ -760,7 +760,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
                   </div>
 
                   {/* Statistiques par statut */}
-                  <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md">
                     <h4 className="text-md font-semibold text-gray-900 dark:text-white mb-4">
                       Répartition par statut
                     </h4>
@@ -768,11 +768,11 @@ export default function ClientSection({ section }: ClientSectionProps) {
                       {Object.entries(statusCounts).map(([statut, count]) => {
                         const percentage = sectionItems.length > 0 ? (count / sectionItems.length) * 100 : 0;
                         const colors = [
-                          'from-indigo-500 to-purple-500',
-                          'from-emerald-500 to-green-500',
-                          'from-amber-500 to-orange-500',
-                          'from-cyan-500 to-blue-500',
-                          'from-pink-500 to-rose-500',
+                          'bg-primary-500',
+                          'bg-success-500',
+                          'bg-warning-500',
+                          'bg-accent-500',
+                          'bg-error-500',
                         ];
                         const colorIndex = Object.keys(statusCounts).indexOf(statut) % colors.length;
                         
@@ -784,7 +784,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
                             </div>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                               <div
-                                className={`h-2 rounded-full bg-gradient-to-r ${colors[colorIndex]} shadow-md transition-all duration-500`}
+                                className={`h-2 rounded-full ${colors[colorIndex]} shadow-md transition-all duration-500`}
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
@@ -796,7 +796,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
 
                   {/* Statistiques par prestataire */}
                   {sectionItems.some(c => c.prestataire) && (
-                    <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md">
                       <h4 className="text-md font-semibold text-gray-900 dark:text-white mb-4">
                         Répartition par prestataire
                       </h4>
@@ -814,11 +814,11 @@ export default function ClientSection({ section }: ClientSectionProps) {
                           .map(([prestataire, count]) => {
                             const percentage = sectionItems.length > 0 ? (count / sectionItems.length) * 100 : 0;
                             const colors = [
-                              'from-indigo-500 to-purple-500',
-                              'from-emerald-500 to-green-500',
-                              'from-amber-500 to-orange-500',
-                              'from-cyan-500 to-blue-500',
-                              'from-pink-500 to-rose-500',
+                              'bg-primary-500',
+                              'bg-success-500',
+                              'bg-warning-500',
+                              'bg-accent-500',
+                              'bg-error-500',
                             ];
                             const colorIndex = Object.keys(statusCounts).indexOf(prestataire) % colors.length;
                             
@@ -830,7 +830,7 @@ export default function ClientSection({ section }: ClientSectionProps) {
                                 </div>
                                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                                   <div
-                                    className={`h-2 rounded-full bg-gradient-to-r ${colors[colorIndex]} shadow-md transition-all duration-500`}
+                                    className={`h-2 rounded-full ${colors[colorIndex]} shadow-md transition-all duration-500`}
                                     style={{ width: `${percentage}%` }}
                                   />
                                 </div>

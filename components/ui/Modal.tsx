@@ -27,6 +27,16 @@ const Modal = ({
   size = 'md',
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+
+  const getFocusableElements = () => {
+    if (!modalRef.current) return [];
+    return Array.from(
+      modalRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => !el.hasAttribute('disabled') && !el.getAttribute('aria-hidden'));
+  };
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -41,16 +51,44 @@ const Modal = ({
       }
     };
 
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const focusable = getFocusableElements();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement as HTMLElement;
+
+      if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    };
+
     if (isOpen) {
+      previousActiveElementRef.current = document.activeElement as HTMLElement;
       document.addEventListener('keydown', handleEscape);
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleTabKey);
       document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        const focusable = getFocusableElements();
+        if (focusable.length > 0) focusable[0].focus();
+      });
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleTabKey);
       document.body.style.overflow = 'unset';
+      if (previousActiveElementRef.current) {
+        previousActiveElementRef.current.focus();
+      }
     };
   }, [isOpen, onClose]);
 
@@ -92,11 +130,11 @@ const Modal = ({
             aria-modal="true"
             aria-labelledby={title ? 'modal-title' : undefined}
           >
-            <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-md w-full flex flex-col overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 max-h-[90vh]">
+            <div className="bg-primary backdrop-blur-xl shadow-md w-full flex flex-col overflow-hidden rounded-lg border border-primary max-h-[90vh]">
               {/* Header */}
               {title && (
-                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-                  <h2 id="modal-title" className="text-xl font-bold text-gray-900 dark:text-white">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-primary bg-secondary">
+                  <h2 id="modal-title" className="text-xl font-bold text-primary">
                     {title}
                   </h2>
                   <button
@@ -109,7 +147,7 @@ const Modal = ({
               )}
 
               {/* Content */}
-              <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 bg-white/95 dark:bg-gray-900/95">
+              <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 bg-primary">
                 {children}
               </div>
             </div>

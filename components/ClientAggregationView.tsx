@@ -108,19 +108,19 @@ export default function ClientAggregationView() {
   };
 
   const getStatusColor = (statut: string) => {
-    if (!statut) return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400';
+    if (!statut) return 'bg-secondary text-tertiary border border-primary';
     
     const lowerStatut = statut.toLowerCase();
     if (lowerStatut.includes('accord') || lowerStatut.includes('favorable') || lowerStatut.includes('visé') || lowerStatut.includes('validé') || lowerStatut.includes('ok') || lowerStatut.includes('fait')) {
-      return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+      return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-700';
     }
     if (lowerStatut.includes('refus') || lowerStatut.includes('ko')) {
-      return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
+      return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-700';
     }
     if (lowerStatut.includes('en cours') || lowerStatut.includes('attente') || lowerStatut.includes('effectuer')) {
-      return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
+      return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-700';
     }
-    return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400';
+    return 'bg-secondary text-tertiary border border-primary';
   };
 
   const getStatusIcon = (statut: string) => {
@@ -153,13 +153,13 @@ export default function ClientAggregationView() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Vue Clients</h2>
+        <h2 className="text-2xl font-bold text-primary">Vue Clients</h2>
         <input
           type="text"
           placeholder="Rechercher un client..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+          className="px-4 py-2 rounded-lg border border-primary bg-primary text-sm text-primary focus:outline-none focus:ring-2 focus:ring-amber-500"
         />
       </div>
 
@@ -167,7 +167,7 @@ export default function ClientAggregationView() {
         {filteredClients.map((client) => (
           <div
             key={client.name}
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg transition-all duration-200"
+            className="bg-primary rounded-xl p-6 border border-primary shadow-md hover:shadow-lg transition-all duration-200"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
@@ -175,8 +175,8 @@ export default function ClientAggregationView() {
                   <User className="h-6 w-6 text-amber-600 dark:text-amber-400" weight="bold" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">{client.name}</h3>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <h3 className="text-lg font-bold text-primary">{client.name}</h3>
+                  <div className="flex items-center gap-4 text-sm text-tertiary mt-1">
                     {client.noDp && <span>DP: {client.noDp}</span>}
                     {client.ville && <span>• {client.ville}</span>}
                   </div>
@@ -189,7 +189,7 @@ export default function ClientAggregationView() {
                 <div
                   key={section}
                   className={cn(
-                    'p-3 rounded-lg border transition-all duration-200',
+                    'p-3 rounded-lg transition-all duration-200',
                     getStatusColor(stage.statut)
                   )}
                 >
@@ -213,7 +213,7 @@ export default function ClientAggregationView() {
         ))}
 
         {filteredClients.length === 0 && (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-12 text-tertiary">
             <User className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>Aucun client trouvé</p>
           </div>

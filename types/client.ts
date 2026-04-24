@@ -3,7 +3,6 @@
  * Correspond aux différentes étapes du processus de suivi des installations solaires
  */
 export type Section =
-  | 'clients'
   | 'dp-en-cours'
   | 'dp-accordes'
   | 'dp-refuses'

@@ -1,42 +1,94 @@
 'use client';
 
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
+import ReactDatePicker from 'react-datepicker';
 import { cn } from '@/lib/utils';
-import { Calendar } from '@phosphor-icons/react';
 import type { WithLabelError, WithIcon } from '@/types/common';
+import 'react-datepicker/dist/react-datepicker.css';
 
-interface DatePickerProps
-  extends React.InputHTMLAttributes<HTMLInputElement>,
-    WithLabelError,
-    WithIcon {}
+interface DatePickerProps extends WithLabelError, WithIcon {
+  value?: string | Date | null;
+  onChange: (value: string) => void;
+  placeholderText?: string;
+  minDate?: Date;
+  maxDate?: Date;
+  name?: string;
+  id?: string;
+  className?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+}
 
-const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
-  ({ className, label, error, helperText, id, icon, name, ...props }, ref) => {
-    const inputId = id || `datepicker-${name || Math.random().toString(36).substr(2, 9)}`;
+const DatePicker = forwardRef<ReactDatePicker, DatePickerProps>(
+  (
+    {
+      className,
+      label,
+      error,
+      helperText,
+      id,
+      icon,
+      name,
+      value,
+      onChange,
+      placeholderText,
+      minDate,
+      maxDate,
+      disabled,
+      readOnly,
+      ...props
+    },
+    ref
+  ) => {
+    const generatedId = useId();
+    const inputId = id || generatedId;
+
+    const getDateObject = (): Date | null => {
+      if (!value) return null;
+      if (value instanceof Date) return value;
+      const parsed = new Date(`${value}T00:00:00`);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    };
+
+    const handleDateChange = (date: Date | null) => {
+      if (!date) {
+        onChange('');
+        return;
+      }
+      const tzOffset = date.getTimezoneOffset() * 60000;
+      const localISO = new Date(date.getTime() - tzOffset).toISOString().slice(0, 10);
+      onChange(localISO);
+    };
 
     return (
       <div className="space-y-2">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-semibold text-gray-700 dark:text-gray-300"
+            className="text-sm font-semibold text-secondary"
           >
             {label}
           </label>
         )}
         <div className="relative group">
           {icon && (
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 group-focus-within:text-amber-500 transition-colors duration-200">
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 dark:text-gray-500 group-focus-within:text-primary-500 dark:group-focus-within:text-primary-400 transition-colors duration-200">
               {icon}
             </div>
           )}
-          <input
-            type="date"
+          <ReactDatePicker
+            selected={getDateObject()}
+            onChange={handleDateChange}
+            dateFormat="dd/MM/yyyy"
+            placeholderText={placeholderText || 'JJ/MM/AAAA'}
+            minDate={minDate}
+            maxDate={maxDate}
+            disabled={disabled}
+            readOnly={readOnly}
             id={inputId}
             name={name}
-            key={name || inputId}
             className={cn(
-              'flex h-12 w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 focus-visible:border-amber-500 dark:focus-visible:border-amber-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-500 shadow hover:shadow-md',
+              'flex h-12 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-sm text-gray-900 dark:text-white ring-offset-gray-100 dark:ring-offset-gray-900 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 shadow hover:shadow-md',
               icon && 'pl-12',
               error &&
                 'border-red-500 focus-visible:ring-red-500 focus-visible:border-red-500',
@@ -45,6 +97,9 @@ const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
               className
             )}
             ref={ref}
+            wrapperClassName="w-full"
+            popperClassName="!z-50"
+            calendarClassName="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md"
             aria-describedby={
               error
                 ? `${inputId}-error`

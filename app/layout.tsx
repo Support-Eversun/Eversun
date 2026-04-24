@@ -21,10 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#006d6f" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var raw=localStorage.getItem('app-storage');var t=null;if(raw){var s=JSON.parse(raw);t=s&&s.state&&s.state.theme;}if(!t){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';}var root=document.documentElement;root.classList.toggle('dark',t==='dark');}catch(e){}})();`,
+          }}
+        />
       </head>
       <body
         className={
@@ -32,6 +37,12 @@ export default function RootLayout({
           ' bg-pattern-subtle min-h-screen transition-colors duration-150'
         }
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] focus:bg-primary focus:text-primary px-4 py-2 rounded-md border border-primary shadow-md"
+        >
+          Aller au contenu principal
+        </a>
         <QueryProvider>
           <ThemeProvider>
             <ToastProvider />

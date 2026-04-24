@@ -59,7 +59,7 @@ export default function ToastProvider() {
       case 'info':
         return 'bg-teal-50 dark:bg-teal-900/30 border-teal-200 dark:border-teal-700';
       default:
-        return 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700';
+        return 'bg-secondary border-primary';
     }
   };
 
@@ -89,7 +89,7 @@ export default function ToastProvider() {
 
             <div className="flex items-center gap-3 px-4 py-4">
               {getIcon(toast.type)}
-              <span className="flex-1 text-sm font-medium text-gray-900 dark:text-gray-100">
+              <span className="flex-1 text-sm font-medium text-primary">
                 {toast.message}
               </span>
 
@@ -97,10 +97,10 @@ export default function ToastProvider() {
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => removeToast(toast.id)}
-                  className="p-2 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-110"
+                  className="p-2 rounded-lg hover:bg-secondary transition-all duration-200 hover:scale-110"
                   aria-label="Fermer"
                 >
-                  <X className="w-4 h-4 text-gray-500 dark:text-gray-400" weight="bold" />
+                  <X className="w-4 h-4 text-tertiary" weight="bold" />
                 </button>
               </div>
             </div>

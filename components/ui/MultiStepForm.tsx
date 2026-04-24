@@ -51,13 +51,13 @@ export default function MultiStepForm({
           <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
             Étape {currentStep + 1} sur {steps.length}
           </h2>
-          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">
+          <span className="text-sm font-semibold text-tertiary">
             {Math.round(progress)}%
           </span>
         </div>
         
         {/* Progress Bar */}
-        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="h-3 bg-tertiary rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400"
             initial={{ width: `${((currentStep) / steps.length) * 100}%` }}
@@ -76,7 +76,7 @@ export default function MultiStepForm({
                     ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md scale-105'
                     : index < currentStep
                     ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                    : 'bg-tertiary text-tertiary'
                 }`}
                 initial={false}
                 animate={{ scale: index === currentStep ? 1.1 : 1 }}
@@ -93,7 +93,7 @@ export default function MultiStepForm({
                     ? 'text-amber-600 dark:text-amber-400'
                     : index < currentStep
                     ? 'text-green-600 dark:text-green-400'
-                    : 'text-gray-500 dark:text-gray-400'
+                    : 'text-tertiary'
                 }`}
               >
                 {step.title}
@@ -120,12 +120,12 @@ export default function MultiStepForm({
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between pt-6 border-t border-primary">
         <div className="flex-1">
           {onCancel && (
             <button
               onClick={onCancel}
-              className="px-6 py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+              className="px-6 py-2 rounded-lg border border-primary text-secondary font-semibold hover:bg-secondary transition-all duration-200"
             >
               Annuler
             </button>
@@ -135,7 +135,7 @@ export default function MultiStepForm({
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className="px-6 py-2 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-2 rounded-lg border border-primary text-secondary font-semibold hover:bg-secondary transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <CaretLeft className="w-4 h-4" weight="bold" />
             Précédent

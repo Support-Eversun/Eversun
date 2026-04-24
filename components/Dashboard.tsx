@@ -65,12 +65,12 @@ export default function Dashboard({ initialSection = 'dp-en-cours' }: DashboardP
         onMobileClose={() => setIsMobileSidebarOpen(false)}
       />
       <main className={`flex-1 overflow-auto transition-all duration-200 relative ${
-        isSidebarCollapsed ? 'ml-16' : 'ml-56'
+        isSidebarCollapsed ? 'md:ml-16' : 'md:ml-56'
       }`}>
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setIsMobileSidebarOpen(true)}
-          className="md:hidden fixed top-20 left-4 z-30 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:scale-[1.01] transition-transform duration-200"
+          className="md:hidden fixed top-20 left-4 z-30 p-3 bg-white dark:bg-slate-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 hover:scale-[1.01] transition-transform duration-200"
           aria-label="Ouvrir le menu"
         >
           <List className="h-6 w-6 text-gray-600 dark:text-gray-400" weight="bold" />
@@ -89,7 +89,7 @@ export default function Dashboard({ initialSection = 'dp-en-cours' }: DashboardP
         {showBackToTop && (
           <button
             onClick={scrollToTop}
-            className="fixed bottom-6 right-6 z-50 p-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg shadow-md hover:shadow hover:scale-[1.01] transition-all duration-200"
+            className="fixed bottom-6 right-6 z-50 p-3 bg-primary-500 text-white rounded-lg shadow-md hover:shadow hover:scale-[1.01] transition-all duration-200"
             aria-label="Retour en haut"
           >
             <CaretUp className="h-6 w-6" weight="bold" />

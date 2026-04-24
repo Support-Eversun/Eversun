@@ -28,17 +28,17 @@ interface EmptyStateProps {
 
 const emptyStateConfig = {
   'no-data': {
-    icon: <FileText className="h-16 w-16 text-gray-300 dark:text-gray-600" weight="thin" />,
+    icon: <FileText className="h-16 w-16 text-tertiary" weight="thin" />,
     defaultTitle: 'Aucune donnée disponible',
     defaultDescription: 'Commencez par ajouter votre premier dossier',
   },
   'no-results': {
-    icon: <MagnifyingGlass className="h-16 w-16 text-gray-300 dark:text-gray-600" weight="thin" />,
+    icon: <MagnifyingGlass className="h-16 w-16 text-tertiary" weight="thin" />,
     defaultTitle: 'Aucun résultat',
     defaultDescription: 'Essayez de modifier vos critères de recherche',
   },
   'error': {
-    icon: <Warning className="h-16 w-16 text-gray-300 dark:text-gray-600" weight="thin" />,
+    icon: <Warning className="h-16 w-16 text-tertiary" weight="thin" />,
     defaultTitle: 'Une erreur est survenue',
     defaultDescription: 'Une erreur inattendue s\'est produite',
   },
@@ -66,10 +66,10 @@ export default function EmptyState({
       <div className="mb-6">
         {icon}
       </div>
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+      <h3 className="text-xl font-semibold text-primary mb-2">
         {displayTitle}
       </h3>
-      <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+      <p className="text-tertiary mb-6 max-w-md">
         {displayDescription}
       </p>
       {action && (

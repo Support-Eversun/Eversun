@@ -16,7 +16,7 @@ export default function PaginationControls({
       <button
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page === 1}
-        className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm font-semibold hover:scale-[1.01]"
+        className="px-4 py-2 rounded-lg border border-primary bg-primary text-secondary hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm font-semibold hover:scale-[1.01]"
       >
         Précédent
       </button>
@@ -30,7 +30,7 @@ export default function PaginationControls({
               className={`w-10 h-10 rounded-lg transition-all duration-200 text-sm font-bold ${
                 page === pageNum
                   ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md transform scale-[1.02]'
-                  : 'border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-[1.01]'
+                  : 'border border-primary bg-primary text-secondary hover:bg-secondary hover:scale-[1.01]'
               }`}
             >
               {pageNum}
@@ -41,7 +41,7 @@ export default function PaginationControls({
       <button
         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
-        className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm font-semibold hover:scale-[1.01]"
+        className="px-4 py-2 rounded-lg border border-primary bg-primary text-secondary hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm font-semibold hover:scale-[1.01]"
       >
         Suivant
       </button>

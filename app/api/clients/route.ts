@@ -105,7 +105,6 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit;
 
     const collections = [
-      { section: 'clients', name: 'clients' },
       { section: 'dp-en-cours', name: 'dp_in_progress' },
       { section: 'dp-accordes', name: 'dp_received' },
       { section: 'dp-refuses', name: 'dp_ko' },
@@ -198,7 +197,6 @@ export async function POST(request: Request) {
     }
 
     const sectionToCollection = {
-      clients: 'clients',
       'dp-en-cours': 'dp_in_progress',
       'dp-accordes': 'dp_received',
       'dp-refuses': 'dp_ko',
@@ -275,7 +273,6 @@ export async function PATCH(
     const section = url.searchParams.get('section');
 
     const sectionToCollection = {
-      clients: 'clients',
       'dp-en-cours': 'dp_in_progress',
       'dp-accordes': 'dp_received',
       'dp-refuses': 'dp_ko',

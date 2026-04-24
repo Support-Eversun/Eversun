@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ClientRecord } from '@/types/client';
 import {
   FileText,
@@ -29,27 +29,27 @@ interface KPICardProps {
 
 function KPICard({ title, value, icon, color, trend, description }: KPICardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow hover:border-amber-500 dark:hover:border-amber-500 transition-all duration-200 hover:scale-[1.01] group">
+    <div className="bg-primary rounded-lg p-6 border border-primary shadow-sm hover:shadow transition-colors duration-200 group">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2">
+          <p className="text-sm font-semibold text-tertiary mb-2">
             {title}
           </p>
-          <p className="text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+          <p className="text-4xl font-bold text-warning-600 dark:text-warning-400">
             {value}
           </p>
           {description && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 font-medium">
+            <p className="text-xs text-tertiary mt-2 font-medium">
               {description}
             </p>
           )}
         </div>
-        <div className={`p-4 rounded-lg bg-gradient-to-br ${color} shadow group-hover:scale-[1.01] group-hover:rotate-3 transition-all duration-200`}>
+        <div className={`p-4 rounded-lg bg-gradient-to-br ${color} shadow-sm transition-colors duration-200`}>
           {icon}
         </div>
       </div>
       {trend !== undefined && (
-        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-2 mt-4 pt-4 border-t border-primary">
           {trend > 0 ? (
             <ArrowUp className="h-4 w-4 text-green-500" weight="bold" />
           ) : (
@@ -58,7 +58,7 @@ function KPICard({ title, value, icon, color, trend, description }: KPICardProps
           <span className={`text-sm font-bold ${trend > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
             {Math.abs(trend)}%
           </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">vs mois dernier</span>
+          <span className="text-sm text-tertiary">vs mois dernier</span>
         </div>
       )}
     </div>
@@ -76,22 +76,22 @@ function SectionProgress({ title, count, total, color }: SectionProgressProps) {
   const percentage = total > 0 ? (count / total) * 100 : 0;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow hover:border-amber-500 dark:hover:border-amber-500 transition-all duration-200 hover:scale-[1.01] group">
+    <div className="bg-primary rounded-lg p-5 border border-primary shadow-sm hover:shadow transition-colors duration-200 group">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+        <span className="text-sm font-semibold text-secondary">
           {title}
         </span>
-        <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+        <span className="text-sm font-bold text-warning-600 dark:text-warning-400">
           {count}/{total}
         </span>
       </div>
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+      <div className="w-full bg-tertiary rounded-full h-3 overflow-hidden">
         <div
-          className={`h-3 rounded-full transition-all duration-500 ease-out ${color} shadow group-hover:shadow-md`}
+          className={`h-3 rounded-full transition-all duration-500 ease-out ${color}`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mt-3">
+      <p className="text-xs font-semibold text-tertiary mt-3">
         {percentage.toFixed(1)}% du total
       </p>
     </div>
@@ -103,6 +103,7 @@ export default function DashboardOverview() {
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState<'week' | 'month' | 'quarter' | 'all'>('all');
   const [showDateDropdown, setShowDateDropdown] = useState(false);
+  const dateDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/clients?limit=10000')
@@ -139,6 +140,28 @@ export default function DashboardOverview() {
       .catch(() => {
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!dateDropdownRef.current) return;
+      if (!dateDropdownRef.current.contains(event.target as Node)) {
+        setShowDateDropdown(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowDateDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, []);
 
   // Calculate trends based on historical data
@@ -187,7 +210,7 @@ export default function DashboardOverview() {
     return (
       <div className="p-6 md:p-8 space-y-8">
         {/* Header Skeleton */}
-        <div className="bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 rounded-lg p-8 animate-pulse" />
+        <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-8 animate-pulse" />
         
         {/* KPI Cards Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -255,7 +278,7 @@ export default function DashboardOverview() {
   return (
     <div className="p-6 md:p-8">
       {/* Header */}
-      <div className="mb-8 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-lg p-8 shadow-md relative overflow-hidden">
+      <div className="mb-8 bg-primary-500 rounded-lg p-8 shadow-sm relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-4">
@@ -266,9 +289,12 @@ export default function DashboardOverview() {
               <h1 className="text-3xl font-bold text-white">Tableau de bord</h1>
             </div>
             {/* Date Range Selector */}
-            <div className="relative">
+            <div className="relative" ref={dateDropdownRef}>
               <button
                 onClick={() => setShowDateDropdown(!showDateDropdown)}
+                aria-haspopup="menu"
+                aria-expanded={showDateDropdown}
+                aria-controls="dashboard-date-range-menu"
                 className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm hover:bg-white/30 transition-colors"
               >
                 <Calendar className="h-4 w-4" weight="bold" />
@@ -281,28 +307,36 @@ export default function DashboardOverview() {
                 <CaretDown className="h-4 w-4" weight="bold" />
               </button>
               {showDateDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
+                <div id="dashboard-date-range-menu" role="menu" className="absolute right-0 mt-2 w-48 bg-primary rounded-lg shadow-lg border border-primary z-10">
                   <button
                     onClick={() => { setDateRange('all'); setShowDateDropdown(false); }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors first:rounded-t-lg"
+                    role="menuitemradio"
+                    aria-checked={dateRange === 'all'}
+                    className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors first:rounded-t-lg"
                   >
                     Tout le temps
                   </button>
                   <button
                     onClick={() => { setDateRange('week'); setShowDateDropdown(false); }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    role="menuitemradio"
+                    aria-checked={dateRange === 'week'}
+                    className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors"
                   >
                     Cette semaine
                   </button>
                   <button
                     onClick={() => { setDateRange('month'); setShowDateDropdown(false); }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    role="menuitemradio"
+                    aria-checked={dateRange === 'month'}
+                    className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors"
                   >
                     Ce mois
                   </button>
                   <button
                     onClick={() => { setDateRange('quarter'); setShowDateDropdown(false); }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors last:rounded-b-lg"
+                    role="menuitemradio"
+                    aria-checked={dateRange === 'quarter'}
+                    className="w-full text-left px-4 py-2 text-sm text-secondary hover:bg-secondary transition-colors last:rounded-b-lg"
                   >
                     Ce trimestre
                   </button>
@@ -371,7 +405,7 @@ export default function DashboardOverview() {
 
       {/* Section Progress */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-xl font-semibold text-primary mb-4">
           Progression par section
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -379,44 +413,44 @@ export default function DashboardOverview() {
             title="DP En cours"
             count={dpEnCours}
             total={totalClients}
-            color="bg-gradient-to-r from-blue-500 to-cyan-500"
+            color="bg-primary-500"
           />
           <SectionProgress
             title="DP Accordés"
             count={dpAccordes}
             total={totalClients}
-            color="bg-gradient-to-r from-emerald-500 to-green-500"
+            color="bg-success-500"
           />
           <SectionProgress
             title="DP Refusés"
             count={dpRefuses}
             total={totalClients}
-            color="bg-gradient-to-r from-red-500 to-rose-500"
+            color="bg-error-500"
           />
           <SectionProgress
             title="Consuel En cours"
             count={consuelEnCours}
             total={totalClients}
-            color="bg-gradient-to-r from-amber-500 to-orange-500"
+            color="bg-warning-500"
           />
           <SectionProgress
             title="Consuel Finalisés"
             count={consuelFinalise}
             total={totalClients}
-            color="bg-gradient-to-r from-emerald-500 to-green-500"
+            color="bg-success-500"
           />
           <SectionProgress
             title="Raccordement"
             count={raccordement}
             total={totalClients}
-            color="bg-gradient-to-r from-amber-500 to-orange-500"
+            color="bg-warning-500"
           />
         </div>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-lg p-6 text-white shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01] relative overflow-hidden group">
+        <div className="bg-primary-500 rounded-lg p-6 text-white shadow-sm hover:shadow transition-colors duration-200 relative overflow-hidden group">
           <div className="absolute inset-0 bg-grid-white/[0.1] bg-[length:20px_20px]" />
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
@@ -442,7 +476,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg p-6 text-white shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01] relative overflow-hidden group">
+        <div className="bg-warning-500 rounded-lg p-6 text-white shadow-sm hover:shadow transition-colors duration-200 relative overflow-hidden group">
           <div className="absolute inset-0 bg-grid-white/[0.1] bg-[length:20px_20px]" />
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
@@ -464,7 +498,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-teal-500 to-cyan-500 rounded-lg p-6 text-white shadow-md hover:shadow transition-all duration-200 hover:scale-[1.01] relative overflow-hidden group">
+        <div className="bg-success-500 rounded-lg p-6 text-white shadow-sm hover:shadow transition-colors duration-200 relative overflow-hidden group">
           <div className="absolute inset-0 bg-grid-white/[0.1] bg-[length:20px_20px]" />
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
@@ -490,8 +524,8 @@ export default function DashboardOverview() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Line Chart - Evolution des dossiers */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <div className="bg-primary rounded-lg p-6 border border-primary shadow-md">
+          <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
             <TrendUp className="h-5 w-5 text-teal-500" weight="bold" />
             Évolution des dossiers (30 derniers jours)
           </h3>
@@ -521,8 +555,8 @@ export default function DashboardOverview() {
         </div>
 
         {/* Pie Chart - Répartition par statut */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 shadow-md">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <div className="bg-primary rounded-lg p-6 border border-primary shadow-md">
+          <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
             <FileText className="h-5 w-5 text-teal-500" weight="bold" />
             Répartition par section
           </h3>
